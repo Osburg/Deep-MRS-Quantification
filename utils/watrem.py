@@ -55,10 +55,3 @@ def init(dataset, t_step, f):
         if idx % 100 == 0:
             print(str(idx))
     return dataset
-
-
-# np.save(f, dataset, allow_pickle=True)
-# with open('SfidsCoiledPRESS_WR.npy', 'rb') as f:
-#     dataset = np.load(f)
-# x = dataset[:,0]
-# y = baseline_als(dataset[:,0],100, 0.005)

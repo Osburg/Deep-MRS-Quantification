@@ -35,6 +35,7 @@ class Encoder_Model(pl.LightningModule):
             param.basisset[0:2048, 0 : param.numOfSig].astype("complex64")
         ).cuda(self.param.parameters["gpu"])
         self.criterion = torch.nn.MSELoss(reduction="sum")
+        #osburg: is the inverse temp. ever used?
         self.beta = nn.Parameter(torch.tensor(beta), requires_grad=False).cuda(
             self.param.parameters["gpu"]
         )

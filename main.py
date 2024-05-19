@@ -1,6 +1,5 @@
 # import csv
 import json
-
 import engine as eng
 
 
@@ -15,7 +14,7 @@ def main():
     with open(json_file_path, "r") as j:
         contents = json.loads(j.read())
     for run in contents["runs"]:
-        if run["version"] in ["5/"]:
+        if run["version"] in ["1/"]:
             engine = eng.Engine(run)
             # engine.tuner()
             engine.dotrain()

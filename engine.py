@@ -38,9 +38,6 @@ from torchsummary import summary
 from Model import Encoder_Model
 from utils import Jmrui, watrem
 
-# %%
-
-
 class Engine:
     def __init__(self, parameters):
         if not parameters["intr_plot"]:
@@ -64,7 +61,6 @@ class Engine:
         self.numOfSample = parameters["numOfSample"]
         self.t_step = parameters["t_step"]
         self.trnfreq = parameters["trnfreq"]
-        self.nauis = parameters["nauis"]
         self.save = parameters["save"]
         self.tr = parameters["tr"]
         self.betas = parameters["betas"]
@@ -94,6 +90,7 @@ class Engine:
                 self.dataset = scipy.io.loadmat(self.data_dir).get(self.data_name)
             except:
                 self.dataset = mat73.loadmat(self.data_dir).get(self.data_name)
+        #osburg: number of considered metabolite signals?
         self.numOfSig = parameters["numOfSig"]
         self.sigLen = parameters["sigLen"]
         self.truncSigLen = parameters["truncSigLen"]
@@ -123,11 +120,9 @@ class Engine:
         self.test_nos = parameters["test_nos"]
         self.quality_filt = parameters["quality_filt"]
         self.test_name = parameters["test_name"]
-        self.beta_step = parameters["beta_step"]
         self.MM_type = parameters["MM_type"]
         self.MM_dir = parameters["MM_dir"]
         self.MM_constr = parameters["MM_constr"]
-        self.comp_freq = parameters["comp_freq"]
         if self.MM_dir is not None:
             self.mm = sio.loadmat(self.MM_dir).get("data")
             self.mm[0] = self.mm[0] - 1 * fft.fftshift(fft.fft(self.mm, axis=0))[0]
@@ -184,8 +179,6 @@ class Engine:
             self.basisset = self.basisset[0:2048, :] * np.exp(
                 2 * np.pi * self.ppm2f(self.basis_need_shift[1]) * 1j * self.t
             )
-
-            # %%
 
     def getSignals(self, min_c, max_c, f, d, ph, noiseLevel, ns, mm_cond):
         """
@@ -311,7 +304,6 @@ class Engine:
         plt.clf()
         # plt.show()
 
-    # %%
     def loadModel(autoencoder, path):
         """
         > Loads a model from a file
@@ -325,7 +317,6 @@ class Engine:
             torch.load(path, map_location=torch.device("cpu"))
         )
 
-    # %%
     def tic(self):
         global start_time
         start_time = time.time()
@@ -338,7 +329,6 @@ class Engine:
         timingtxt.write("--- %s ----" % elapsed_time)
         timingtxt.close()
 
-    # %%
     def cal_snr(self, data, endpoints=128, offset=0):
         """
         It takes the first point of the data and divides it by the standard deviation of
@@ -504,6 +494,7 @@ class Engine:
 
         :return: y is the training data, y_test is the test data
         """
+        # osburg: water removal?
         if self.wr[0]:
             self.dataset = watrem.init(self.dataset[:, :], self.t_step, self.wr[1])
             with open(self.data_dir_ny, "wb") as f:
@@ -1164,9 +1155,6 @@ class Engine:
 
         # file.close()
 
-    # %%
-
-    # %%
     def test_asig(self, shift_t, alpha_t, ph_t, nl):
         sns.set_style("white")
         id = "test_" + str(shift_t) + "_" + str(alpha_t) + "_" + str(nl)
@@ -1227,7 +1215,6 @@ class Engine:
         # print(np.sqrt(ampl_var))
         # print(self.cal_snrf(fft.fftshift(fft.fft(y_n))))
 
-    # %%
     def monteCarlo(self, n, f, d, nl, ph, load):
         sns.set_style("whitegrid")
         id = (
@@ -1355,7 +1342,6 @@ class Engine:
 
         df.to_csv(self.saving_dir + id + "_csvrslt")
 
-    # %%
     def erroVsnoise(self, n, nl, f, d, ph, load):
         sns.set_style("whitegrid")
         id = (
@@ -1466,7 +1452,6 @@ class Engine:
         self.savefig(id + "errors vs snr")
         df.to_csv(self.saving_dir + id + "_allrslt")
 
-    # %%
     def testmodel(self, model, x):
         model.eval()
         with torch.no_grad():
@@ -1920,11 +1905,6 @@ def tunermodel(config, engine=None):
                     on="validation_end",
                 ),
             ]
-            #        TuneReportCallback(
-            # {
-            #     "mean_accuracy": "performance"
-            # },
-            # on="validation_end")]
         )
     else:
         trainer = pl.Trainer(
@@ -1934,12 +1914,6 @@ def tunermodel(config, engine=None):
             progress_bar_refresh_rate=0,
             callbacks=[
                 lr_monitor,
-                # TuneReportCheckpointCallback(
-                #     metrics={
-                #         "mean_accuracy": "performance"
-                #     },
-                #     filename="checkpoint",
-                #     on="validation_end")])
                 TuneReportCallback(
                     {"mean_accuracy": "performance"}, on="validation_end"
                 ),

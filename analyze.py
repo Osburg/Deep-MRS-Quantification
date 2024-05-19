@@ -66,7 +66,7 @@ def plotppm(sig, ppm1, ppm2, rev, linewidth=0.3, linestyle="-"):
         plt.gca().invert_xaxis()
     return g
 
-
+# osburg: Water removal?
 def watrem(data, dt, n):
     npts = len(data)
     dwell = dt / 0.001
