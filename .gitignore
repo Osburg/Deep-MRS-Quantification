@@ -1,0 +1,5 @@
+*.pyc
+*.csv
+.DS_Store
+lightning_logs
+MNIST
