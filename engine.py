@@ -1458,11 +1458,6 @@ class Engine:
             temp = model.forward(x)
         return temp
 
-    def sigmoid(self, x):
-        z = np.exp(-x)
-        sig = 1 / (1 + z)
-        return sig
-
     def predict_ensembles(self, y_test, mean_=True):
         decs = []
         encs = []
