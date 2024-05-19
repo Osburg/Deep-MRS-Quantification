@@ -17,14 +17,14 @@ import torch
 from matplotlib import pyplot as plt
 from pytorch_lightning.callbacks import EarlyStopping, LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger
-from ray.train.trainer import tune
+from ray import tune
 from ray.tune import CLIReporter
 from ray.tune.integration.pytorch_lightning import (
     TuneReportCallback,
     TuneReportCheckpointCallback,
 )
 from ray.tune.schedulers import HyperBandForBOHB
-from ray.tune.suggest.bohb import TuneBOHB
+from ray.tune.search.bohb import TuneBOHB
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import (
     mean_absolute_error,
