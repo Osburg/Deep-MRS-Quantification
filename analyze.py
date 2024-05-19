@@ -3,7 +3,7 @@ import json
 from datetime import date
 from pathlib import Path
 
-import hlsvdpro
+import hlsvdpropy
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.fft as fft
@@ -18,7 +18,6 @@ from sklearn.metrics import (
 )
 
 # important note about sklearn linear reg
-#
 # %% parameters
 exten_path = "clean_code/vanila/"
 analyze_name = "exp4"
@@ -72,7 +71,7 @@ def watrem(data, dt, n):
     npts = len(data)
     dwell = dt / 0.001
     nsv_sought = n
-    result = hlsvdpro.hlsvd(data, nsv_sought, dwell)
+    result = hlsvdpropy.hlsvd(data, nsv_sought, dwell)
     nsv_found, singvals, freq, damp, ampl, phas = result
     idx = np.where(
         (result[2] < (0.001 * (Crfr + 50))) & (result[2] > (0.001 * (Crfr - 50)))
@@ -85,7 +84,7 @@ def watrem(data, dt, n):
         result[4][idx],
         result[5][idx],
     )
-    fid = hlsvdpro.create_hlsvd_fids(
+    fid = hlsvdpropy.create_hlsvd_fids(
         result, npts, dwell, sum_results=True, convert=False
     )
     return fid, result
